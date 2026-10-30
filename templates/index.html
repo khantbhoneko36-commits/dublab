@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DubLab — ဗီဒီယို Dubbing Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+{% if maintenance %}
+<div class="maintbanner" id="maintbanner">⚠️ {{ maintenance_msg }}</div>
+{% endif %}
+<div class="orbs"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
+
+<header class="top">
+  <div class="logo">
+    <span class="logo-mark">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round">
+        <path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 10v4"/>
+      </svg>
+    </span>
+    <span class="logo-name">DubLab</span>
+  </div>
+  <p class="tagline">ဗီဒီယို dubbing studio</p>
+</header>
+
+<main>
+{% if maintenance %}
+  <section class="card maint-card">
+    <img src="/static/maintenance.jpg" alt="Website Maintenance" class="maint-img">
+    <p class="maint-text">{{ maintenance_msg }}</p>
+    <p class="maint-sub">ပြန်ကောင်းတာနဲ့ ဒီနေရာမှာ အကြောင်းကြားမယ် 🙏</p>
+  </section>
+{% else %}
+  <nav class="tabs" id="tabs">
+    <button class="tab on" data-tab="dub">🎬 Dubbing</button>
+    <button class="tab" data-tab="srt">📝 SRT ဘာသာပြန်</button>
+  </nav>
+  <div id="tab-dub">
+  <div class="notice-overlay" id="updatenotice" hidden>
+    <div class="notice-box">
+      <div class="notice-icon">🎉</div>
+      <h2>Update အသစ်!</h2>
+      <p>📝 <b>SRT ဘာသာပြန်</b> tab အသစ် — ဒီ site ထဲမှာတင် SRT ဘာသာပြန်လို့ရပြီ!</p>
+      <label class="noshow"><input type="checkbox" id="noshowagain"> နောက်မပြပါနဲ့</label>
+      <button class="cta" id="noticeok">စသုံးမယ် 👍</button>
+    </div>
+  </div>
+  <!-- STEP 1: upload -->
+  <section class="card" id="card-upload">
+    <h2>၁ · ဗီဒီယို တင်ပါ</h2>
+    <div class="drop" id="drop">
+      <div class="drop-icon">📤</div>
+      <p class="drop-title">နှိပ်၍ ရွေးပါ <span class="dim">သို့မဟုတ် ဖိုင်ဆွဲချပါ</span></p>
+      <p class="drop-sub">MP4 / MOV · အများဆုံး ၅ မိနစ်</p>
+      <input type="file" id="file" accept="video/mp4,video/quicktime,video/webm,.mkv" hidden>
+    </div>
+    <video id="preview" controls playsinline hidden></video>
+    <p id="filemeta" class="filemeta" hidden></p>
+  </section>
+
+  <!-- STEP 2: options -->
+  <section class="card" id="card-opts" hidden>
+    <h2>၂ · ဘာသာစကားရွေးပါ</h2>
+    <div class="optgrid" id="dirgrid">
+      <button class="opt selected" data-dir="en2mm">
+        <span class="opt-flag">🇬🇧 → 🇲🇲</span>
+        <span class="opt-label">English → မြန်မာ</span>
+      </button>
+      <button class="opt" data-dir="mm2en">
+        <span class="opt-flag">🇲🇲 → 🇬🇧</span>
+        <span class="opt-label">မြန်မာ → English</span>
+      </button>
+    </div>
+    <h2>၃ · အသံရွေးပါ</h2>
+    <div class="optgrid" id="voicegrid">
+      <button class="opt selected" data-voice="female">
+        <span class="opt-flag">👩</span>
+        <span class="opt-label">အမျိုးသမီး</span>
+      </button>
+      <button class="opt" data-voice="male">
+        <span class="opt-flag">👨</span>
+        <span class="opt-label">အမျိုးသား</span>
+      </button>
+    </div>
+    <button class="cta" id="go" {% if maintenance %}disabled title="ခေတ္တ ရပ်ထားပါတယ်"{% endif %}>✨ Dub စလုပ်မယ်</button>
+    <p class="note">ဗီဒီယိုတိုလေးဆို ၁–၃ မိနစ်လောက် ကြာမယ်</p>
+  </section>
+
+  <!-- STEP 3: progress -->
+  <section class="card" id="card-progress" hidden>
+    <h2>⏳ Dub လုပ်နေတယ်…</h2>
+    <div class="bar"><span id="barfill"></span></div>
+    <p class="stage" id="stagelabel">တန်းစီနေတယ်</p>
+    <ul class="stages" id="stages">
+      <li data-s="audio">အသံထုတ်ယူခြင်း</li>
+      <li data-s="transcribe">စကားပြောမှတ်သားခြင်း</li>
+      <li data-s="translate">ဘာသာပြန်ခြင်း</li>
+      <li data-s="voice">အသံဖော်ခြင်း</li>
+      <li data-s="mux">ဗီဒီယိုပေါင်းစပ်ခြင်း</li>
+    </ul>
+    <p class="note">ဒီစာမျက်နှာကို ပိတ်သွားလို့ရတယ် — link သိမ်းထားရင် ပြန်ကြည့်လို့ရတယ်</p>
+    <details class="logs">
+      <summary>📋 Live logs</summary>
+      <pre id="livelog"></pre>
+    </details>
+  </section>
+
+  <!-- STEP 4: result -->
+  <section class="card" id="card-result" hidden>
+    <h2>🎉 ရပြီ!</h2>
+    <video id="resultvideo" controls playsinline></video>
+    <div class="speedrow" id="speedrow">
+      <span class="speedlabel">🎚️ အနှေး/အမြန်</span>
+      <button data-r="0.75">0.75x</button>
+      <button data-r="1" class="on">1x</button>
+      <button data-r="1.25">1.25x</button>
+      <button data-r="1.5">1.5x</button>
+      <input type="range" id="speedslider" min="0.5" max="2" step="0.05" value="1" aria-label="speed">
+      <span class="speedval" id="speedval">1.00x</span>
+    </div>
+    <a class="cta" id="download" href="#">⬇️ Download</a>
+    <div class="review">
+      <h3>⭐ ဒီ dub ကို အဆင့်သတ်မှတ်ပါ</h3>
+      <div class="stars" id="rstars">
+        <button data-s="1">☆</button><button data-s="2">☆</button><button data-s="3">☆</button><button data-s="4">☆</button><button data-s="5">☆</button>
+      </div>
+      <textarea id="rmsg" rows="2" placeholder="အကြံပြုချက်… (ဥပမာ — ၁၀ မိနစ်ထိ လိုချင်တယ်)"></textarea>
+      <button class="ghost" id="rsend">📩 ပို့မယ်</button>
+      <p class="note" id="rdone" hidden>ကျေးဇူးတင်ပါတယ်! 🙏</p>
+    </div>
+    <button class="ghost" id="again">🔁 နောက်တစ်ခု လုပ်မယ်</button>
+  </section>
+
+  <section class="card" id="card-error" hidden>
+    <h2>⚠️ အမှားရှိတယ်</h2>
+    <p class="err" id="errmsg"></p>
+    <button class="ghost" id="retry">🔁 ပြန်စမ်းမယ်</button>
+  </section>
+
+  <section class="card">
+    <details class="feedback">
+      <summary>💬 အကြံပြုချက် ပေးရန်</summary>
+      <div class="stars" id="fstars">
+        <button data-s="1">☆</button><button data-s="2">☆</button><button data-s="3">☆</button><button data-s="4">☆</button><button data-s="5">☆</button>
+      </div>
+      <textarea id="fmsg" rows="2" placeholder="ဘာလိုချင်လဲ ပြောပြပါ…"></textarea>
+      <button class="ghost" id="fsend">📩 ပို့မယ်</button>
+      <p class="note" id="fdone" hidden>ကျေးဇူးတင်ပါတယ်! 🙏</p>
+    </details>
+  </section>
+  </div><!-- /tab-dub -->
+  <div id="tab-srt" hidden>
+    <section class="card srt-card">
+      <iframe id="srtframe" src="/srt/" title="SRT ဘာသာပြန်"></iframe>
+    </section>
+  </div>
+{% endif %}
+</main>
+
+<footer>Made for creators · DubLab</footer>
+<script src="/static/app.js"></script>
+</body>
+</html>
