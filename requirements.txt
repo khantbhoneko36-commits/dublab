@@ -1,0 +1,9 @@
+flask>=3.0
+waitress>=2.1
+faster-whisper>=1.0
+edge-tts>=7.0
+# pinned: newer av (19.x) removed the metadata_errors kwarg faster-whisper uses;
+# newer huggingface_hub (1.x) breaks faster-whisper's model download
+av==15.1.0
+huggingface_hub<1
+gtts>=2.5

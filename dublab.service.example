@@ -1,0 +1,15 @@
+[Unit]
+Description=DubLab short-video dubbing website
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/dublab
+EnvironmentFile=/opt/dublab/.env
+ExecStart=/opt/dublab/venv/bin/waitress-serve --listen=127.0.0.1:8092 --threads=8 app:app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+venv/
+jobs/
+reviews.jsonl
+*.log
+.edge_primary
