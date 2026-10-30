@@ -1,0 +1,29 @@
+/* DubLab admin dashboard — reviews */
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:rgba(255,255,255,.04);border:1px solid var(--card-br);border-radius:14px;
+  padding:14px 8px;text-align:center}
+.stat-num{display:block;font-size:26px;font-weight:800;background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-label{font-size:12px;color:var(--dim)}
+.dist{display:flex;flex-direction:column;gap:6px}
+.drow{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim)}
+.drow .lbl{width:34px}
+.dbar{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.dbar span{display:block;height:100%;background:var(--grad);border-radius:99px}
+.drow .cnt{width:30px;text-align:right}
+.frow{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters button{background:rgba(255,255,255,.05);border:1px solid var(--card-br);color:var(--dim);
+  border-radius:99px;padding:7px 12px;font-size:13px;cursor:pointer;font-family:inherit}
+.filters button.on{background:rgba(168,85,247,.18);color:var(--txt);border-color:var(--p1)}
+.mini{background:rgba(255,255,255,.05);border:1px solid var(--card-br);color:var(--txt);
+  border-radius:12px;padding:7px 11px;font-size:15px;cursor:pointer}
+.rev{border:1px solid var(--card-br);border-radius:14px;padding:12px 14px;margin-bottom:10px;
+  background:rgba(255,255,255,.025)}
+.rev .meta{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  font-size:12px;color:var(--dim);margin-bottom:6px}
+.rev .stars{font-size:14px;letter-spacing:1px}
+.rev .msg{font-size:14.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.rev .del{background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;padding:2px 4px}
+.rev .del:hover{color:#f87171}
+.empty{text-align:center;color:var(--dim);padding:20px 0}
